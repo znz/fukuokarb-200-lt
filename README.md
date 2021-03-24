@@ -1,6 +1,7 @@
-# Ruby 3.0
+# Ruby 3.0.0 コネタ集
 
-TODO: スライドの説明
+[Fukuoka.rb 200回 LT大会 (#202) - connpass](https://fukuokarb.connpass.com/event/206956/)
+での発表資料です。
 
 ## 作者向け
 
