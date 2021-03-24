@@ -1,10 +1,10 @@
-# Ruby 3.0.0 で遊んでみる
+# Ruby 3.0.0 コネタ集
 
 author
 :   Kazuhiro NISHIYAMA
 
 content-source
-:   Fukuoka.rb 200回 LT大会
+:   Fukuoka.rb 200回 LT大会 (#202)
 
 date
 :   2021-03-24
@@ -28,6 +28,8 @@ theme
 # はじめに
 
 LT なので内容はコネタ集です
+
+# Ractor 関連
 
 # Ractor で SEGV
 
@@ -60,9 +62,9 @@ main Ractor を Queue 代わりに使えるかも?
 "foo"
 ```
 
-# ただし shareable の影響あり
+# shareable の影響あり
 
-shareable ではないオブジェクトはコピーされてしまう
+ただし shareable ではないオブジェクトはコピーされてしまうので Queue 代わりには使いにくい
 
 ```
 % ruby -e 'Ractor.current.send("foo".tap{|x|p x.object_id});
@@ -72,7 +74,9 @@ shareable ではないオブジェクトはコピーされてしまう
 "foo"
 ```
 
-## frozen_string_literal
+# 互換性関連のコネタ
+
+# frozen_string_literal
 
 `frozen_string_literal: true` magic comment 対応を 3.0.0 以降のみで確認すると対応漏れする可能性あり
 
@@ -81,37 +85,8 @@ shareable ではないオブジェクトはコピーされてしまう
 false
 ```
 
-# TRUE / FALSE / NIL
+string interpolation (文字列補間) があると frozen にならなくなった
 
-ついに消えたので普通の定数として利用可能 (普通は使わない)
-
-```
-% ruby -e 'NIL = :dummy; p NIL.nil?'
-false
-```
-
-# $SAFE / $KCODE
-
-普通のグローバル変数になった (これも普通は使わない)
-
-```
-% ruby -e '$KCODE = "foo"; p $KCODE'
-"foo"
-```
-
-# ruby -T
-
-`$SAFE` 関連が消えて `-T` オプションが消えたので将来何かに使われるかも?
-
-```
-ruby 3.0:
-% ruby -T0 -e 0
-ruby: invalid option -T  (-h will show valid options) (RuntimeError)
-
-ruby 2.7:
-% ruby -T0 -e 0
-ruby: warning: ruby -T will be removed in Ruby 3.0
-```
 
 # Warning[:deprecated]
 
@@ -125,3 +100,43 @@ true
 % ruby -e '$VERBOSE=true; p Warning[:deprecated]'
 false
 ```
+
+# ruby -T
+
+`$SAFE` 関連が消えて `-T` オプションが消えた
+
+```
+ruby 3.0:
+% ruby -T0 -e 0
+ruby: invalid option -T  (-h will show valid options) (RuntimeError)
+
+ruby 2.7:
+% ruby -T0 -e 0
+ruby: warning: ruby -T will be removed in Ruby 3.0
+```
+
+将来何か他の意味に使われるかも?
+
+# $SAFE / $KCODE
+
+普通のグローバル変数になった (これも普通は使わない)
+
+```
+% ruby -e '$KCODE = "foo"; p $KCODE'
+"foo"
+```
+
+# TRUE / FALSE / NIL
+
+ついに消えたので普通の定数として利用可能 (普通は使わない)
+
+```
+% ruby -e 'NIL = :dummy; p NIL.nil?'
+false
+```
+
+# おわり
+
+- Ractor はまだバグがありそうなので探すと面白いかも
+- 気付きにくい非互換もあるので複数 ruby バージョン対応するときには注意
+- 長い間残っていて 3.0 で消えているものがあります
